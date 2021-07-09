@@ -45,6 +45,7 @@ void android_main(struct android_app* app)
         frameTime.end();
 
     }while(app->destroyRequested==0);
+   //dont exit until destroyed requested as only this thread exits not the Activity(apps main thread).  if want to exit call ANativeActivity_finish(or APP_CMD_DESTROY)
 }
 void initialSetup(android_app *app)//move to context::init;
 {

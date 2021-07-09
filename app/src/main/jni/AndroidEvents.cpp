@@ -26,6 +26,7 @@ int32_t AndroidEvents::onInputEvent(android_app* papp, AInputEvent* event)
         // TouchLog("the pointer index for all is %d and the pointer id is %d",pointerIndex,pointerId);
         touchX = AMotionEvent_getX(event, pointerIndex);
         touchY = AMotionEvent_getY(event, pointerIndex);
+        Logi("touch coordinate","%f and %f",touchX,touchY);
       //  Logi("OnInputEvent :","touch coordinates are x - %f and y -%f",touchX , touchY);
         switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK)
         {
@@ -40,47 +41,86 @@ int32_t AndroidEvents::onInputEvent(android_app* papp, AInputEvent* event)
 
 
 
+
     }
 
     return 1;//change based on dispatching
 }
  void AndroidEvents::onAppCmd(android_app* app, int32_t cmd)
 {
-    AppContext *context = static_cast<AppContext *>(app->userData);
-    Logi("command handling","done");
+    AppContext *context = static_cast<AppContext *>(app->userData);//NULL?never?
     switch(cmd)
     {
+        /*java Lauch(onCreate(ANativeActivity_OnCreate->android_main) ->Created(Onstart)->Started follows below in the same ordered
+         * better only render(incluing audio) only after all resumed,focus gained and windowCreated.
+         * */
+        case APP_CMD_START:
+            context->onStart();
+            break;
+        case APP_CMD_RESUME:
+            //app in foreground
+            context->onResume();
+            break;
+        case APP_CMD_PAUSE:
+            context->onPause();
+            break;
+        case APP_CMD_STOP:
+            context->onStop();
+            break;
+        case APP_CMD_DESTROY:
+            context->onDestroy();
+            //destroy opengl;
+            break;
+        case APP_CMD_LOW_MEMORY:
+            context->onLowMemory();
+            break;
+        case APP_CMD_WINDOW_RESIZED:
+            context->onWindowResized();
+            break;
         case APP_CMD_SAVE_STATE:
             // the OS asked us to save the state of the app
+            context->onSaveState();
             break;
         case APP_CMD_INIT_WINDOW:
             {
-
-
             context->onWindowInit();
-            JavaCall::hideSystemUI();
+
             }
+            break;
+        case APP_CMD_TERM_WINDOW:
+        {
+            context->onWindowTermination();
+        }
+            break;
+        case APP_CMD_WINDOW_REDRAW_NEEDED:
+            context->onWindowRedrawNeeded();
+            break;
+        case APP_CMD_INPUT_CHANGED:
+            context->onInputChange();
+            break;
+
+        case APP_CMD_CONTENT_RECT_CHANGED:
+            context->onContentRectChanged();
             break;
         case APP_CMD_CONFIG_CHANGED:
         {
-            Logi("cmd","config changed");
-            context->onScreenRotation();
-
-
+           context->onConfigChanged();
         }break;
 
-        case APP_CMD_TERM_WINDOW:
-        {
-            context->bWindowInit=false;
-        }
-            break;
         case APP_CMD_LOST_FOCUS:
+            context->onFocusLost();
+            //drawggin notification drawer sitching away to another app,(can happen without being paused)
             // if the app lost focus, avoid unnecessary processing
-            //(like monitoring the accelerometer)
+            //(like monitoring the accelerometer)inputs etc//(in games should be paused as control is lost).
             break;
         case APP_CMD_GAINED_FOCUS:
+            context->onFocusGained();
             // bring back a certain functionality, like monitoring the accelerometer
             break;
+        default:
+            Loge("UnknownCommand","onAppCMD");
     }
+    Logi("command handling","done");
+
 }
 

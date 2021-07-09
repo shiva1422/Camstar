@@ -8,8 +8,10 @@ import android.Manifest;
 import android.app.NativeActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -110,6 +112,12 @@ public class MainActivity extends NativeActivity {
 
     }
 
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        Log.e("Java","ConfigChanged" + newConfig.orientation);
+        super.onConfigurationChanged(newConfig);
+    }
 
     float[] getDisplayParams()
     {

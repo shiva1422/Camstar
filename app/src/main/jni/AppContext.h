@@ -22,7 +22,7 @@
 class DisplayMetrics;
 class View;
 class AppContext {
-private:
+protected:
     static android_app *app;
 
 public:
@@ -32,12 +32,35 @@ public:
     VulkanContext vulkanContext;
     GLuint uiProgram;
     bool bWindowInit=false,bGraphicsInit=false,bAppFirstOpen=true;
+    int screenOrientation  = ACONFIGURATION_ORIENTATION;
 
 
     View *contentView = nullptr;
 
     AppContext();
+
+    //Activity call backs;Protected?????
+
+    //onCreate is the main method;
+    virtual void onStart();
+    virtual void onResume();
+    virtual void onPause();
+    virtual void onStop();
+    virtual void onDestroy();
     void onWindowInit();
+    void onWindowResized();
+    void onWindowRedrawNeeded();
+    void onWindowTermination();
+
+    void onContentRectChanged();
+    virtual void onLowMemory();
+    virtual void onFocusLost();
+    virtual void onFocusGained();
+    virtual void onConfigChanged();
+    virtual void onSaveState();
+    virtual void onInputChange();
+
+
     void setContentView(View *view);
     void onScreenRotation();
     static android_app* getApp()
