@@ -133,6 +133,7 @@ void AppContext::onConfigChanged()
     else
         AppLogI("Landscape");
     AppLogI("%d and orientation %d",AConfiguration_getScreenHeightDp(app->config),AConfiguration_getOrientation(app->config));
+   // glViewport(0,0,displayMetrics.screenHeight,displayMetrics.screenWidth);
 }
 void AppContext::onSaveState()
 {

@@ -3,7 +3,7 @@
 //
 
 #include "Shader.h"
-#include "../FileManager.h"
+#include "../FileManager/FileManager.h"
 #define GraphicsLog(...)((void)__android_log_print(ANDROID_LOG_ERROR,"GRAPHICS LOG:",__VA_ARGS__))
 GLuint Shader::createShaderProgram(const char *vertexShader, const char *fragmentShader)
 {

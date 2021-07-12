@@ -7,6 +7,7 @@ find_library(log-lib log)
 ##Oboe
 
 
+include_directories(FileManager Graphics UI Audio )
 
 
 add_library(main SHARED main.cpp AndroidEvents.cpp AppContext.cpp JavaCall.cpp Commons.cpp FileManager/FileManager.cpp)
@@ -24,8 +25,8 @@ add_library(graphics STATIC Graphics/GLContext.cpp ${VULKAN_DIR}/src/common/vulk
 target_include_directories(graphics PUBLIC ${ANDROID_NDK}/sources/android/native_app_glue ${VULKAN_DIR}/src/include/vulkan ${VULKAN_DIR}/src/common)
 
 
-add_library(ui STATIC UI/View.cpp UI/ClickListener.cpp UI/ViewGroup.cpp)
-target_include_directories(ui PUBLIC ${ANDROID_NDK}/sources/android/native_app_glue )
+add_library(ui STATIC Bitmap.cpp UI/Texture.cpp UI/View.cpp UI/ClickListener.cpp UI/ImageView.cpp UI/ImageViewGL.cpp UI/ViewGroup.cpp UI/Renderer.cpp)
+target_include_directories(ui PUBLIC ${ANDROID_NDK}/sources/android/native_app_glue Graphics )
 
 
 

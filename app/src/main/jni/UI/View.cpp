@@ -10,7 +10,9 @@ GLuint View::indexBufId=0;
 GLuint View::uvBufId=0;
 float View::vertices[]={-1.0f,-1.0f,1.0f,-1.0f,1.0f,1.0f,-1.0f,1.0f};
 DisplayMetrics* View::disMet =nullptr;
-
+/*
+ * Check centreX , centre Y without bounds
+ */
 View::View() {}
 
 View::View(float startX, float startY, float width, float height)
@@ -49,6 +51,45 @@ void View ::draw()
     glBindBuffer(GL_ARRAY_BUFFER,0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 
+}
+void View::fitToBounds(float bStartX, float bStartY, float bWidth, float bHeight)
+{
+    float newWidth,newHeight;
+    //float aspectRatioImage=width/height;
+    float xRation,yRation;
+    xRation=width/bWidth;
+    yRation=height/bHeight;
+    if(xRation>1 || yRation>1)
+    {
+        float finalRatio;
+        if(xRation>=yRation)
+            finalRatio=xRation;
+        else
+            finalRatio=yRation;
+
+        newHeight=height/finalRatio;
+        newWidth=width/finalRatio;
+
+    }
+    else
+    {
+        newWidth=width;
+        newHeight=height;
+    }
+    float  xdiff=bWidth-newWidth;
+    float  ydiff=bHeight-newHeight;
+    //  {UILogE("negative difference xdiff %f and ydiff %f",xdiff,ydiff);}
+    setBounds(bStartX+(xdiff/2.0),bStartY+(ydiff/2.0),newWidth,newHeight);
+}
+void View::fitToBoundsWithCentre(float centreX, float centreY, float bWidth, float bHeight)
+{
+    fitToBounds(centreX - bWidth/2.0,centreY - bHeight/2.0,bWidth,bHeight);
+}
+void View::onScreenRotation()
+{
+    //Display Metric should also be rotated x<->y
+    Logi("view screenRot","%f %f %f %f",startX,startY,width,height);
+    setBounds(startY,startX,width,height);
 }
 bool View::onDispatchTouch(float touchX, float touchY, int pointerId, TouchAction touchAction)
 {
@@ -122,10 +163,4 @@ void View::initializeUI()
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
     glBindBuffer(GL_ARRAY_BUFFER,0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
-}
-void View::onScreenRotation()
-{
-    //Display Metric should also be rotated x<->y
-    Logi("view screenRot","%f %f %f %f",startX,startY,width,height);
-    setBounds(startY,startX,width,height);
 }

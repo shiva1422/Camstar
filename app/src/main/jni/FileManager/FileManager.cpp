@@ -8,11 +8,11 @@
 #include <cstring>
 #include <errno.h>
 #include <malloc.h>
-#include "../FileManager.h"
+#include "FileManager.h"
 #include "../AppContext.h"
 #include "android/log.h"
 #include "stb_image.h"
-
+stbi_io_callbacks FileManager::assetIOCallbacks ={.read = FileManager::readAsset,.skip=FileManager::skip,.eof = FileManager::eof};
 AAsset * FileManager::getAsset(const char *assetLoc)
 {
 
@@ -46,4 +46,20 @@ bool FileManager::getShaderSource(const char *fileName, char **toSource)
     }
     Loge("fileManger Shader::getSournce","shader source could not be loaded check location %s",fileName);
     return false;
+}
+int32 FileManager::readAsset(void *asset, char *data, int size)
+{
+    //same function instead readAsset directly use AAsset_read;
+    return AAsset_read((AAsset *)asset,data,size);
+}
+int32 FileManager::eof(void *asset)
+{
+    //clear asset here?
+    if(AAsset_getRemainingLength64((AAsset *)asset) <=0)
+        return 1;
+    return 0;
+}
+void FileManager::skip(void *asset, int n)
+{
+    AAsset_seek((AAsset *)asset,n,SEEK_CUR);//n+1?
 }

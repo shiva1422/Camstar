@@ -3,3 +3,10 @@
 //
 
 #include "Bitmap.h"
+void Bitmap::loadImageFromAssets(const char *assetLoc)
+{
+    delete pixels;
+    pixels = nullptr;
+
+
+}

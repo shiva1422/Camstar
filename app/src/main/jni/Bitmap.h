@@ -10,8 +10,9 @@
 
 class Bitmap {
 public:
-    int32 width=0,height=0,stride=0;
+    int32 width=0,height=0,stride=0,numChannels=0;
     uint8 *pixels= nullptr;
+    void loadImageFromAssets(const char* assetLoc);
 
 };
 

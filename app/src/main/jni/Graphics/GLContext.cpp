@@ -123,3 +123,83 @@ bool GLContext::onAppReopen()
     GraphicsLog("successfully initialization on app reopeng");
     return true;
 }
+GLenum GLContext::getGlError(const char *tag)
+{
+    GLenum glError=glGetError();
+
+#ifndef NDEBUG
+    switch (glError)
+    {
+        case GL_INVALID_ENUM: {
+            Loge(tag, "OPENGL ERROR - INVALID ENUM");
+        }
+            break;
+        case GL_INVALID_VALUE: {
+            Loge(tag, "OPENGL ERROR - INVALID VALUE");
+        }
+            break;
+        case GL_INVALID_OPERATION:
+        {
+            Loge(tag, "OPENGL ERROR - INVALID OPERATION");
+        }
+            break;
+        case GL_INVALID_FRAMEBUFFER_OPERATION:
+
+        {
+            Loge(tag,"OPENGL ERROR - INVALIDE FRAMEBUFFER OPERATION - CURRENTLY BOUND FRAMEBUFFER IS NOT FRAME BUFFER COMPLETE");
+        }
+        case GL_OUT_OF_MEMORY:
+        {
+            Loge(tag,"OPENGL ERROR-NOT ENOUGH MEMORY");
+        }
+        case GL_NO_ERROR:
+        {
+            Loge(tag,"NO OPENGL ERROR");
+        }
+            break;
+        default:
+            Loge(tag, "NO OPENGL EROOR OR the opengl error not listed in printglerror");
+
+    }
+#endif
+
+    return glError;
+}
+GLenum GLContext::getEglError(const char *tag)
+{
+    EGLenum eglError=eglGetError();
+
+#ifndef NDEBUG
+    switch(eglError)
+    {
+        case EGL_BAD_DISPLAY :
+        {
+            Loge(tag,"EGL ERROR - BAD DISPLAY-DISPLAY IS NOT AN EGL DISPLAY CONNECTION");
+
+        }
+            break;
+        case EGL_BAD_SURFACE :
+        {
+            Loge(tag,"EGL ERROR - BAD SURFACE -SURFACE NOT AN EGL  DRAWING SURFACE");
+
+        }
+            break;
+        case EGL_CONTEXT_LOST :
+        {
+            Loge(tag,"EGL ERROR - EGL CONTEXT LOST -REINITILIZING EVERYTHING AGAIN NEEDED");
+
+        }
+            break;
+        case EGL_NOT_INITIALIZED:
+        {
+            Loge(tag,"EGL ERROR - EGL NOT INITIALIZED - DISPLAY HAS NOT BEEN INITIALIZED");
+
+        }
+            break;
+        default:
+            Loge(tag,"NO EGL ERROR OR ERROR IS NOT LISTED IN pringGlError function");
+
+    }
+#endif
+    return eglError;
+}

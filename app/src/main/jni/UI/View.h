@@ -44,6 +44,8 @@ public:
     View(float startX,float startY,float width,float height);
     static void initializeUI();
     virtual void setBounds(float startX,float startY,float width,float height);
+    void fitToBounds(float bStartX,float bStartY,float bWidth,float bHeight);
+    void fitToBoundsWithCentre(float centreX,float centreY,float bWidth,float bHeight);
     void setBackgroundColor(float red,float green,float blue,float alpha);
     virtual bool onDispatchTouch(float touchX,float touchY,int pointerId,TouchAction touchAction);
     virtual void onScreenRotation();

@@ -26,7 +26,8 @@ public:
     bool init();//initDisplay
     bool onAppReopen();
     void destroyGL();
-    GLenum printGlError(const char *tag);
+    static GLenum getGlError(const char *tag);
+    static GLenum getEglError(const char *tag);
 
 };
 
